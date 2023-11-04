@@ -1,3 +1,4 @@
+import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -19,9 +20,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import java.time.format.TextStyle
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.pointerInput
+import java.awt.Canvas
 
 fun main() = singleWindowApplication {
     var result by remember { mutableStateOf("") }
+    var showFirstKeyboard by remember { mutableStateOf(false) }
 
 
     Box(  //фон карточки
@@ -50,6 +54,13 @@ fun main() = singleWindowApplication {
                             .weight(0.7f) // Занимает часть высоты
                             .background(Color(0xFF39383d))
                     ) {
+                        Box( //контейнер для переключателя
+                            modifier = Modifier.fillMaxSize(),
+                            contentAlignment = Alignment.TopCenter
+                        ) {
+                            Switch(checked = showFirstKeyboard, onCheckedChange = { showFirstKeyboard = !showFirstKeyboard })
+                        }
+
                         Box( //пространство для поля в котором текст
                             modifier = Modifier.fillMaxSize()
                                 .padding(top = 50.dp), // Отступ сверху
@@ -80,6 +91,11 @@ fun main() = singleWindowApplication {
                             .weight(2f) // Занимает часть высоты
                             .background(Color(0xFF363434))
                     ) {
+
+                        Crossfade(targetState = showFirstKeyboard) { showFirstKeyboard ->
+                            if (!showFirstKeyboard) {
+                                // Контейнер для первой клавиатуры
+
                         Box( //контейнер для клавиатуры
                             modifier = Modifier.fillMaxSize(), // Заполнить всю доступную область
                             contentAlignment = Alignment.TopCenter // Выравнивание содержимого по центру
@@ -133,8 +149,27 @@ fun main() = singleWindowApplication {
                                     Spacer(modifier = Modifier.height(1.dp))
                                 }
                             }
-                        }
-                    }
+                        }}
+                                else {
+                                    // Контейнер для второй клавиатуры
+                                    Box(
+                                        modifier = Modifier
+                                            .width(350.dp) // Задаем ширину
+                                            .height(500.dp) // Задаем высоту
+                                            .padding(10.dp) // Отступы
+                                            .background(Color.White, shape = RoundedCornerShape(45.dp))
+
+
+
+                                    ) {
+
+
+
+
+
+
+                                    }
+                    }}}
                 }
             }
         }
