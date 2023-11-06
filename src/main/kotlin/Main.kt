@@ -11,6 +11,7 @@ import androidx.compose.ui.window.singleWindowApplication
 import androidx.compose.foundation.background
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.foundation.border
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -20,13 +21,31 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import java.time.format.TextStyle
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.pointer.consumeAllChanges
 import androidx.compose.ui.input.pointer.pointerInput
 import java.awt.Canvas
+import java.awt.Stroke
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.Button
+import androidx.compose.material.Text
+import androidx.compose.runtime.*
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.graphics.drawscope.translate
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.singleWindowApplication
 
 fun main() = singleWindowApplication {
     var result by remember { mutableStateOf("") }
     var showFirstKeyboard by remember { mutableStateOf(false) }
-
+    val points = remember { mutableStateListOf<Offset>() }
+    var pointerOffset by remember {
+        mutableStateOf(Offset(0f, 0f))
+    }
 
     Box(  //фон карточки
         modifier = Modifier
@@ -164,7 +183,17 @@ fun main() = singleWindowApplication {
                                     ) {
 
 
+                                        Canvas(modifier = Modifier.fillMaxSize().pointerInput(Unit) {
+                                            detectDragGestures { change, dragAmount ->
+                                                change.consumeAllChanges()
+                                                points.add(change.position)
+                                            }
+                                        }) {
+                                            points.forEach { point ->
+                                                drawCircle(color = Color.Black, center = point, radius = 1.dp.toPx())
 
+                                            }
+                                        }
 
 
 
